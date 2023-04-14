@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.learn.mybatis.mapper.EmpMapper">
+
+    <!--
+        表中的字段名和对象中的属性名不一致的情况，如何处理映射关系：
+        1、为查询的字段起别名，和属性名保持一致
+        2、当字段符合MySQL的要求使用_，而属性符合Java的要求使用驼峰，此时可以
+      在MyBatis的核心配置文件中设置一个全局配置，可以自动将下划线映射为驼峰
+      emp_id>>>empId,   emp_name>>>empName
+        3、使用resultMap自定义映射处理
+    -->
+
+    <!--    1、为查询的字段起别名，和属性名保持一致-->
+    <!--<select id="getEmpById" resultType="com.learn.mybatis.pojo.Emp">
+        select emp_id as empId, emp_name as empName, age, gender, dept_id
+        from t_emp
+        where emp_id = #{empId};
+    </select>-->
+    <!--2、当字段符合MySQL的要求使用_，而属性符合Java的要求使用驼峰，此时可以
+    在MyBatis的核心配置文件中设置一个全局配置，可以自动将下划线映射为驼峰-->
+    <!--<select id="getEmpById" resultType="com.learn.mybatis.pojo.Emp">
+        select emp_id, emp_name, age, gender, dept_id
+        from t_emp
+        where emp_id = #{empId};
+    </select>-->
+
+    <!--    3、使用resultMap自定义映射处理-->
+    <!--
+        标签：resultMap:设置自定义的映射关系，有两个属性
+      id:唯一标识
+      type:处理映射关系
+        标签resulMap的常用子标签：
+      子标签id：处理主键和实体类中属性的映射关系
+      子标签result：处理普通字段和实体类中属性的映射关系
+      子标签association:处理多对一的映射关系（处理属性为实体类类型）
+    -->
+    <resultMap id="empResultMap" type="com.learn.mybatis.pojo.Emp">
+        <id column="emp_id" property="empId"></id>
+        <result column="emp_name" property="empName"></result>
+        <!--<result column="age" property="age"></result>
+        <result column="gender" property="gender"></result>-->
+    </resultMap>
+    <select id="getEmpById" resultMap="empResultMap">
+        select emp_id, emp_name, age, gender, dept_id
+        from t_emp
+        where emp_id = #{empId};
+    </select>
+    <!--<select id="getEmpAndDeptByEmpId" resultMap="empResultMap">
+        select t_emp.*, t_dept.*
+        from t_emp
+                 left join t_dept on t_emp.dept_id = t_dept.dept_id
+        where t_emp.emp_id = #{empId};
+    </select>-->
+
+    <!--<resultMap id="empAndDeptResultMap" type="com.learn.mybatis.pojo.Emp">
+        <id column="emp_id" property="empId"></id>
+        <result column="emp_name" property="empName"></result>
+        &lt;!&ndash;<result column="age" property="age"></result>
+        <result column="gender" property="gender"></result>&ndash;&gt;
+        <result column="dept_id" property="dept.deptId"></result>
+        <result column="dept_name" property="dept.deptName"></result>
+    </resultMap>-->
+    <resultMap id="empAndDeptResultMap" type="com.learn.mybatis.pojo.Emp">
+        <id column="emp_id" property="empId"></id>
+        <result column="emp_name" property="empName"></result>
+        <result column="age" property="age"></result>
+        <result column="gender" property="gender"></result>
+        <association property="dept" javaType="com.learn.mybatis.pojo.Dept">
+            <id column="dept_id" property="deptId"></id>
+            <result column="dept_name" property="deptName"></result>
+        </association>
+    </resultMap>
+    <select id="getEmpAndDeptByEmpId" resultMap="empAndDeptResultMap">
+        select t_emp.*, t_dept.*
+        from t_emp
+                 left join t_dept on t_emp.dept_id = t_dept.dept_id
+        where t_emp.emp_id = #{empId};
+    </select>
+
+    <resultMap id="empAndDeptByStepResultMap" type="com.learn.mybatis.pojo.Emp">
+        <id column="emp_id" property="empId"></id>
+        <result column="emp_name" property="empName"></result>
+        <result column="age" property="age"></result>
+        <result column="gender" property="gender"></result>
+        <association column="dept_id" property="dept"
+                     select="com.learn.mybatis.mapper.DeptMapper.getEmpAndDeptByStep2"
+                     fetchType="lazy"></association>
+    </resultMap>
+    <select id="getEmpAndDeptByStep1" resultMap="empAndDeptByStepResultMap">
+        select emp_id, emp_name, age, gender, dept_id
+        from t_emp
+        where emp_id = #{empId};
+    </select>
+
+    <select id="getDeptAndEmpByStep2" resultType="com.learn.mybatis.pojo.Emp">
+        select emp_id, emp_name, age, gender, dept_id
+        from t_emp
+        where dept_id = #{deptId};
+    </select>
+</mapper>

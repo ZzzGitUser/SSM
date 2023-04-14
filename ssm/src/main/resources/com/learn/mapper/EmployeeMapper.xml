@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.learn.mapper.EmployeeMapper">
+    <insert id="addEmployee">
+        INSERT INTO t_emp
+        VALUES (NULL, #{empName}, #{age}, #{gender}, #{email})
+    </insert>
+
+    <update id="updateEmployeeById">
+        UPDATE t_emp
+        SET emp_name=#{empName},
+            age=#{age},
+            gender=#{gender},
+            email=#{email}
+        WHERE emp_id = #{empId}
+    </update>
+
+    <delete id="deleteEmployeeById">
+        DELETE
+        FROM t_emp
+        WHERE emp_id = #{empId}
+    </delete>
+
+    <select id="getAllEmployee" resultType="com.learn.pojo.Employee">
+        SELECT emp_id, emp_name, age, gender, email
+        FROM t_emp
+    </select>
+
+    <select id="getEmployeeById" resultType="com.learn.pojo.Employee">
+        SELECT emp_id, emp_name, age, gender, email
+        FROM t_emp
+        WHERE emp_id = #{empId}
+    </select>
+</mapper>

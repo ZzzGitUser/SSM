@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+</head>
+<body>
+<h1>INDEX.HTML</h1>
+<hr>
+<h2>@RequestMapping注解的标识位置</h2>
+<a th:href="@{/hello}">标识在方法上</a><br>
+<a th:href="@{/test/hello}">标识在类上</a>
+<hr>
+<h2>@RequestMapping注解的value属性</h2>
+<a th:href="@{/hello}">/hello</a><br>
+<a th:href="@{/abc}">/abc</a>
+<hr>
+<h2>@RequestMapping注解的method属性</h2>
+<a th:href="@{/hello}">GET请求</a><br>
+<form th:action="@{/hello}" method="post">
+    <input type="submit" value="POST请求">
+</form>
+<hr>
+<h2>@RequestMapping注解的params属性</h2>
+<a th:href="@{/hello?username}">username</a><br>
+<a th:href="@{/hello(username)}">(username)</a><br>
+<a th:href="@{/hello}">!username</a>
+<hr>
+<h2>SpringMVC支持ant风格的路径</h2>
+<a th:href="@{/a/b/c/aaa}">路径：/a/b/c/aaa</a>
+<hr>
+<h2>SpringMVC支持路径中的占位符</h2>
+<a th:href="@{/test/rest/admin/1}">测试value属性中的占位符</a>
+
+<hr>
+<h2>获取请求参数</h2>
+<form th:action="@{/param/pojo}" method="post">
+    用户名：<input type="test" name="username"><br>
+    密码：<input type="password" name="password"><br>
+    <input type="submit" value="登录"><br>
+</form>
+
+<hr>
+<h2>向域中共享数据</h2>
+<a th:href="@{/test/mav}">通过ModelAndView向请求域中共享数据</a><br>
+<a th:href="@{/test/model}">通过Model向请求域共享数据</a><br>
+<a th:href="@{/test/map}">通过Map向请求域共享数据</a><br>
+<a th:href="@{/test/modelMap}">通过ModelMap向请求域共享数据</a><br>
+<a th:href="@{/test/session}">向会话域共享数据</a><br>
+<a th:href="@{/test/application}">向应用域共享数据</a>
+
+<hr>
+<a th:href="@{/test/view/thymeleaf}">测试SpringMVC的视图ThymeleafView</a><br>
+<a th:href="@{test/view/forward}">测试SpringMVC的视图InternalResourceView</a><br>
+<a th:href="@{test/view/redirect}">测试SpringMVC的视图RedirectView</a>
+</body>
+</html>

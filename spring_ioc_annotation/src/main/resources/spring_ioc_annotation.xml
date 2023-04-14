@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--情况一：最基本的扫描方式-->
+    <context:component-scan base-package="com.learn.spring"></context:component-scan>
+
+    <!--
+        情况二：指定要排除的组件：context:exclude-filter
+        type="annotation|assignable"：设置排除扫描的方式
+        annotation：根据注解的类型进行排除，expression：需要设置排除得到注解的全类名
+        assignable：根据类的类型进行排除，expression：需要设置排除的类的全类名
+    -->
+    <!--<context:component-scan base-package="com.learn.spring">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        &lt;!&ndash;<context:exclude-filter type="assignable" expression="com.learn.spring.controller.UserController"/>&ndash;&gt;
+    </context:component-scan>-->
+
+    <!--
+        情况三：仅扫描指定组件
+        注意：需要在context:component-scan标签中设置use-default-filters="false"
+        use-default-filters="true"（默认），所设置的包下的所有类都需要扫描，此时可以使用排除扫描
+        use-default-filters="false"，所设置的包下的所有类都不需要扫描，此时可以使用包含扫描
+    -->
+    <!--<context:component-scan base-package="com.learn.spring" use-default-filters="false">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        &lt;!&ndash;<context:include-filter type="assignable" expression="com.learn.spring.controller.UserController"/>&ndash;&gt;
+    </context:component-scan>-->
+</beans>

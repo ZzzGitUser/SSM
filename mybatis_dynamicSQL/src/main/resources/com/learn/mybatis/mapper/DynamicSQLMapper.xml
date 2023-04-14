@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.learn.mybatis.mapper.DynamicSQLMapper">
+
+    <sql id="empColumns">
+        emp_id,emp_name, age, gender, dept_id
+    </sql>
+
+    <insert id="insertMoreEmp">
+        INSERT INTO t_emp VALUES
+        <foreach collection="emps" item="emp" separator=",">
+            (null,#{emp.empName},#{emp.age},#{emp.gender},null)
+        </foreach>
+    </insert>
+
+    <delete id="deleteMoreEmp">
+        DELETE FROM t_emp WHERE emp_id IN
+        <foreach collection="empIds" item="empId" separator="," open="(" close=")">
+            #{empId}
+        </foreach>
+    </delete>
+
+    <!--<select id="getEmpByCondition" resultType="com.learn.mybatis.pojo.Emp">
+        select emp_id, emp_name, age, gender, dept_id
+        from t_emp
+        where
+        <if test="empName!=null and empName!=''">
+            emp_name=#{empName}
+        </if>
+        <if test="age!=null and age!=''">
+            and age=#{age}
+        </if>
+        <if test="gender!=null and gender!=''">
+            and gender=#{gender}
+        </if>
+    </select>-->
+
+    <!--<select id="getEmpByCondition" resultType="com.learn.mybatis.pojo.Emp">
+        select emp_id, emp_name, age, gender, dept_id
+        from t_emp
+        <where>
+            <if test="empName!=null and empName!=''">
+                emp_name=#{empName}
+            </if>
+            <if test="age!=null and age!=''">
+                and age=#{age}
+            </if>
+            <if test="gender!=null and gender!=''">
+                and gender=#{gender}
+            </if>
+        </where>
+    </select>-->
+
+    <select id="getEmpByCondition" resultType="com.learn.mybatis.pojo.Emp">
+        SELECT
+        <include refid="empColumns"></include>
+        FROM t_emp
+        <trim prefix="WHERE" suffixOverrides="AND">
+            <if test="empName!=null and empName!=''">
+                emp_name=#{empName} AND
+            </if>
+            <if test="age!=null and age!=''">
+                age=#{age} AND
+            </if>
+            <if test="gender!=null and gender!=''">
+                gender=#{gender}
+            </if>
+        </trim>
+    </select>
+
+    <select id="getEmpByChoose" resultType="com.learn.mybatis.pojo.Emp">
+        SELECT
+        <include refid="empColumns"></include>
+        FROM t_emp
+        <where>
+            <choose>
+                <when test="empName!=null and empName!=''">
+                    emp_name=#{empName}
+                </when>
+                <when test="age!=null and age!=''">
+                    age=#{age}
+                </when>
+                <when test="gender!=null and gender!=''">
+                    gender=#{gender}
+                </when>
+            </choose>
+        </where>
+    </select>
+</mapper>
